@@ -1,0 +1,16 @@
+#这里的格式比较严格，一定要按照IDE的提示进行，不要手动敲打
+server:
+  port: 9001
+spring:
+  application:
+#  这里指定的是微服务的名字，官方推荐用中横杠，不要用下划线，可能会出BUG
+    name: tensquare-base
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.175.128:3306/tensquare_base?charactorEncoding=utf-8&useSSL=false
+    username: root
+    password: itcast
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
