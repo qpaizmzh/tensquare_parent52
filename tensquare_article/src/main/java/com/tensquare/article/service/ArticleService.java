@@ -1,22 +1,20 @@
 package com.tensquare.article.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +37,9 @@ public class ArticleService {
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 查询全部列表
@@ -83,7 +84,13 @@ public class ArticleService {
      * @return
      */
     public Article findById(String id) {
-        return articleDao.findById(id).get();
+        //给方法添加Redis简单的缓存机制
+        Article article = (Article) redisTemplate.opsForValue().get("article_" + id);
+        if (article == null) {
+            article = articleDao.findById(id).get();
+            redisTemplate.opsForValue().set("article_" + id, article);
+        }
+        return article;
     }
 
     /**
@@ -101,6 +108,7 @@ public class ArticleService {
      *
      * @param article
      */
+    @CacheEvict//这个注释用于清除缓存用的，可以设置在字段、方法等的地方
     public void update(Article article) {
         articleDao.save(article);
     }
@@ -110,6 +118,7 @@ public class ArticleService {
      *
      * @param id
      */
+    @CacheEvict//这个注释用于清除缓存用的，可以设置在字段、方法等的地方
     public void deleteById(String id) {
         articleDao.deleteById(id);
     }
