@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="tensquare_article" />
         <module name="tensquare_base" />
+        <module name="tensquare_comment" />
         <module name="tensquare_common" />
         <module name="tensquare_gathering" />
         <module name="tensquare_qa" />
@@ -15,5 +16,8 @@
         <module name="tensquare_spit" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tensquare_comment" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
