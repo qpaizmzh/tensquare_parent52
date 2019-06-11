@@ -15,7 +15,9 @@
         <module>tensquare_article</module>
         <module>tensquare_gathering</module>
         <module>tensquare_spit</module>
-        <module>tensquare_comment</module>
+        <module>tensquare_search</module>
+        <module>tensquare_rabbitMQ</module>
+        <module>tensquare_user</module>
     </modules>
     <packaging>pom</packaging>
 

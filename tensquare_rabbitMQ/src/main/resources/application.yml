@@ -1,0 +1,10 @@
+server:
+  port: 9008
+spring:
+  rabbitmq:
+    host: 192.168.175.128
+    port: 5672
+    username: guest
+    password: guest
+  application:
+    name: tensquare-rabbitMQ
