@@ -12,11 +12,15 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import entitys.Result;
+import entitys.StatusCode;
+import org.apache.commons.codec.digest.Crypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import utils.IdWorker;
@@ -26,120 +30,143 @@ import com.tensquare.user.pojo.Admin;
 
 /**
  * 服务层
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 @Service
 public class AdminService {
 
-	@Autowired
-	private AdminDao adminDao;
-	
-	@Autowired
-	private IdWorker idWorker;
+    @Autowired
+    private AdminDao adminDao;
 
-	/**
-	 * 查询全部列表
-	 * @return
-	 */
-	public List<Admin> findAll() {
-		return adminDao.findAll();
-	}
+    @Autowired
+    private IdWorker idWorker;
 
-	
-	/**
-	 * 条件查询+分页
-	 * @param whereMap
-	 * @param page
-	 * @param size
-	 * @return
-	 */
-	public Page<Admin> findSearch(Map whereMap, int page, int size) {
-		Specification<Admin> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size);
-		return adminDao.findAll(specification, pageRequest);
-	}
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
-	
-	/**
-	 * 条件查询
-	 * @param whereMap
-	 * @return
-	 */
-	public List<Admin> findSearch(Map whereMap) {
-		Specification<Admin> specification = createSpecification(whereMap);
-		return adminDao.findAll(specification);
-	}
 
-	/**
-	 * 根据ID查询实体
-	 * @param id
-	 * @return
-	 */
-	public Admin findById(String id) {
-		return adminDao.findById(id).get();
-	}
+    /**
+     * 查询全部列表
+     *
+     * @return
+     */
+    public List<Admin> findAll() {
+        return adminDao.findAll();
+    }
 
-	/**
-	 * 增加
-	 * @param admin
-	 */
-	public void add(Admin admin) {
-		admin.setId( idWorker.nextId()+"" );
-		adminDao.save(admin);
-	}
 
-	/**
-	 * 修改
-	 * @param admin
-	 */
-	public void update(Admin admin) {
-		adminDao.save(admin);
-	}
+    /**
+     * 条件查询+分页
+     *
+     * @param whereMap
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<Admin> findSearch(Map whereMap, int page, int size) {
+        Specification<Admin> specification = createSpecification(whereMap);
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        return adminDao.findAll(specification, pageRequest);
+    }
 
-	/**
-	 * 删除
-	 * @param id
-	 */
-	public void deleteById(String id) {
-		adminDao.deleteById(id);
-	}
 
-	/**
-	 * 动态条件构建
-	 * @param searchMap
-	 * @return
-	 */
-	private Specification<Admin> createSpecification(Map searchMap) {
+    /**
+     * 条件查询
+     *
+     * @param whereMap
+     * @return
+     */
+    public List<Admin> findSearch(Map whereMap) {
+        Specification<Admin> specification = createSpecification(whereMap);
+        return adminDao.findAll(specification);
+    }
 
-		return new Specification<Admin>() {
+    /**
+     * 根据ID查询实体
+     *
+     * @param id
+     * @return
+     */
+    public Admin findById(String id) {
+        return adminDao.findById(id).get();
+    }
 
-			@Override
-			public Predicate toPredicate(Root<Admin> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> predicateList = new ArrayList<Predicate>();
+    /**
+     * 增加
+     *
+     * @param admin
+     */
+    public void add(Admin admin) {
+        admin.setId(idWorker.nextId() + "");
+        adminDao.save(admin);
+    }
+
+    /**
+     * 修改
+     *
+     * @param admin
+     */
+    public void update(Admin admin) {
+        adminDao.save(admin);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     */
+    public void deleteById(String id) {
+        adminDao.deleteById(id);
+    }
+
+    /**
+     * 动态条件构建
+     *
+     * @param searchMap
+     * @return
+     */
+    private Specification<Admin> createSpecification(Map searchMap) {
+
+        return new Specification<Admin>() {
+
+            @Override
+            public Predicate toPredicate(Root<Admin> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicateList = new ArrayList<Predicate>();
                 // ID
-                if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
-                	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
+                if (searchMap.get("id") != null && !"".equals(searchMap.get("id"))) {
+                    predicateList.add(cb.like(root.get("id").as(String.class), "%" + (String) searchMap.get("id") + "%"));
                 }
                 // 登陆名称
-                if (searchMap.get("loginname")!=null && !"".equals(searchMap.get("loginname"))) {
-                	predicateList.add(cb.like(root.get("loginname").as(String.class), "%"+(String)searchMap.get("loginname")+"%"));
+                if (searchMap.get("loginname") != null && !"".equals(searchMap.get("loginname"))) {
+                    predicateList.add(cb.like(root.get("loginname").as(String.class), "%" + (String) searchMap.get("loginname") + "%"));
                 }
                 // 密码
-                if (searchMap.get("password")!=null && !"".equals(searchMap.get("password"))) {
-                	predicateList.add(cb.like(root.get("password").as(String.class), "%"+(String)searchMap.get("password")+"%"));
+                if (searchMap.get("password") != null && !"".equals(searchMap.get("password"))) {
+                    predicateList.add(cb.like(root.get("password").as(String.class), "%" + (String) searchMap.get("password") + "%"));
                 }
                 // 状态
-                if (searchMap.get("state")!=null && !"".equals(searchMap.get("state"))) {
-                	predicateList.add(cb.like(root.get("state").as(String.class), "%"+(String)searchMap.get("state")+"%"));
+                if (searchMap.get("state") != null && !"".equals(searchMap.get("state"))) {
+                    predicateList.add(cb.like(root.get("state").as(String.class), "%" + (String) searchMap.get("state") + "%"));
                 }
-				
-				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
 
-			}
-		};
+                return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
 
-	}
+            }
+        };
 
+    }
+
+    public Result login(Admin admin) {
+        //先在数据库中查询是否有这个用户
+        Admin adminsql = adminDao.findAdminByLoginname(admin.getLoginname());
+        if (adminsql == null) {
+            return new Result(false, StatusCode.ERROR, "登录失败");
+        }
+        //查出这个用户的对象后使用matches方法看输入密码和加密密码是否匹配
+        else if (adminsql != null && encoder.matches(admin.getPassword(), adminsql.getPassword())) {
+            return new Result(true, StatusCode.OK, "登录成功");
+        }
+        return new Result(false, StatusCode.ERROR, "登录失败");
+    }
 }
