@@ -1,10 +1,13 @@
 package com.tensquare.user;
 
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import utils.IdWorker;
+import utils.JwtUtil;
 
 @SpringBootApplication
 public class UserApplication {
@@ -21,5 +24,10 @@ public class UserApplication {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtUtil getJwt() {
+        return new JwtUtil();
     }
 }

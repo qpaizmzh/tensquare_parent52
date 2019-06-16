@@ -15,3 +15,7 @@ spring:
     host: 192.168.175.128
   redis:
     host: 192.168.175.128
+jwt:
+  config:
+    key: michael jordan
+    ttl: 300000

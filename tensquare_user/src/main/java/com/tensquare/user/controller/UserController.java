@@ -3,6 +3,8 @@ package com.tensquare.user.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +22,9 @@ import com.tensquare.user.service.UserService;
 import entitys.PageResult;
 import entitys.Result;
 import entitys.StatusCode;
+import utils.JwtUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 控制器层
@@ -40,14 +45,13 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private HttpServletRequest request;
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestBody User user) {
-        User userlogin = userService.login(user);
-        if (userlogin == null) {
-            return new Result(false, StatusCode.ERROR, "登录失败");
-        }
-        return new Result(true, StatusCode.OK, "登录成功");
+        return userService.login(user);
     }
 
 
@@ -129,8 +133,14 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public Result delete(@PathVariable String id) {
-        userService.deleteById(id);
-        return new Result(true, StatusCode.OK, "删除成功");
+        Claims admin_claims = (Claims) request.getAttribute("admin_claims");
+        if (admin_claims != null) {
+            userService.deleteById(id);
+            return new Result(true, StatusCode.OK, "删除成功");
+        }
+            return new Result(false,StatusCode.ACCESSERROR,"没有相应的权限进行删除");
+
+
     }
 
     /***

@@ -3,6 +3,7 @@ package com.tensquare.qa.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,9 @@ import com.tensquare.qa.service.ProblemService;
 import entitys.PageResult;
 import entitys.Result;
 import entitys.StatusCode;
+import utils.JwtUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 控制器层
@@ -31,6 +35,12 @@ public class ProblemController {
 
     @Autowired
     private ProblemService problemService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private HttpServletRequest request;
 
 
     /**
@@ -87,6 +97,12 @@ public class ProblemController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Problem problem) {
+        Claims claims = (Claims) request.getAttribute("user_claims");
+
+        if (claims == null) {
+            return new Result(false, StatusCode.ACCESSERROR, "没有权限");
+        }
+
         problemService.add(problem);
         return new Result(true, StatusCode.OK, "增加成功");
     }
@@ -117,16 +133,17 @@ public class ProblemController {
 
     @RequestMapping(value = "newlist/{label}/{page}/{size}")
     public Result newQAlist(@PathVariable String label, @PathVariable int page, @PathVariable int size) {
-       return new Result(true, StatusCode.OK, "查询成功",problemService.newQAlist(label,page,size));
+        return new Result(true, StatusCode.OK, "查询成功", problemService.newQAlist(label, page, size));
     }
 
     @RequestMapping(value = "hotlist/{label}/{page}/{size}")
     public Result hotQAlist(@PathVariable String label, @PathVariable int page, @PathVariable int size) {
-        return new Result(true, StatusCode.OK, "查询成功",problemService.hotQAlist(label,page,size));
+        return new Result(true, StatusCode.OK, "查询成功", problemService.hotQAlist(label, page, size));
     }
+
     @RequestMapping(value = "waitlist/{label}/{page}/{size}")
     public Result waitQAlist(@PathVariable String label, @PathVariable int page, @PathVariable int size) {
-        return new Result(true, StatusCode.OK, "查询成功",problemService.waitQAlist(label,page,size));
+        return new Result(true, StatusCode.OK, "查询成功", problemService.waitQAlist(label, page, size));
     }
 
 }

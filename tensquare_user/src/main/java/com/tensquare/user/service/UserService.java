@@ -10,6 +10,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import entitys.Result;
+import entitys.StatusCode;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -26,6 +28,7 @@ import utils.IdWorker;
 
 import com.tensquare.user.dao.UserDao;
 import com.tensquare.user.pojo.User;
+import utils.JwtUtil;
 
 /**
  * 服务层
@@ -49,6 +52,9 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     /**
@@ -208,11 +214,19 @@ public class UserService {
      * @param user
      * @return
      */
-    public User login(User user) {
+    public Result login(User user) {
         User userlogin = userDao.findByMobile(user.getMobile());
+
         if (userlogin != null && encoder.matches(user.getPassword(), userlogin.getPassword())) {
-            return userlogin;
+            //登录成功后进行数据加密，返回指定的密钥
+            String token = jwtUtil.createJWT(user.getId(),user.getMobile(), "user");
+
+            Map<String,String> map = new HashMap<>();
+            map.put("mobile",user.getMobile());
+            map.put("token",token);
+
+            return new Result(true, StatusCode.OK, "登录成功",map);
         }
-        return null;
+        return new Result(false, StatusCode.ERROR, "登录失败");
     }
 }
