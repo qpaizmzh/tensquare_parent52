@@ -160,11 +160,9 @@ public class AdminService {
     public Result login(Admin admin) {
         //先在数据库中查询是否有这个用户
         Admin adminsql = adminDao.findAdminByLoginname(admin.getLoginname());
-        if (adminsql == null) {
-            return new Result(false, StatusCode.ERROR, "登录失败");
-        }
-        //查出这个用户的对象后使用matches方法看输入密码和加密密码是否匹配
-        else if (adminsql != null && encoder.matches(admin.getPassword(), adminsql.getPassword())) {
+
+
+        if (adminsql != null && encoder.matches(admin.getPassword(), adminsql.getPassword())) {
             return new Result(true, StatusCode.OK, "登录成功");
         }
         return new Result(false, StatusCode.ERROR, "登录失败");

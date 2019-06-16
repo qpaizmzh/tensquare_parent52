@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import utils.IdWorker;
@@ -45,6 +46,9 @@ public class UserService {
 
     @Autowired
     private AmqpTemplate amqpTemplate;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
 
     /**
@@ -188,17 +192,27 @@ public class UserService {
         //需要缓存redis来保存生成的随机数，生成随机数用到了long3工具类
         String random = RandomStringUtils.randomNumeric(6);
 
-        System.out.println("收到的验证码是："+random);
+        System.out.println("收到的验证码是：" + random);
 
         Map<String, String> maps = new HashMap<>();
         maps.put("mobile", mobile);
         maps.put("random", random);
 
-        redisTemplate.opsForValue().set(mobile, random,1,TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(mobile, random, 1, TimeUnit.HOURS);
         //用到消息中间件来进行传输信息
         amqpTemplate.convertAndSend("msgs", maps);
     }
 
-
-
+    /***
+     * 登录
+     * @param user
+     * @return
+     */
+    public User login(User user) {
+        User userlogin = userDao.findByMobile(user.getMobile());
+        if (userlogin != null && encoder.matches(user.getPassword(), userlogin.getPassword())) {
+            return userlogin;
+        }
+        return null;
+    }
 }

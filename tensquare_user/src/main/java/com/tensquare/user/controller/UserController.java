@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,19 @@ public class UserController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Result login(@RequestBody User user) {
+        User userlogin = userService.login(user);
+        if (userlogin == null) {
+            return new Result(false, StatusCode.ERROR, "登录失败");
+        }
+        return new Result(true, StatusCode.OK, "登录成功");
+    }
 
 
     /**
@@ -92,6 +106,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody User user) {
         userService.add(user);
+        user.setPassword(encoder.encode(user.getPassword()));
         return new Result(true, StatusCode.OK, "增加成功");
     }
 
