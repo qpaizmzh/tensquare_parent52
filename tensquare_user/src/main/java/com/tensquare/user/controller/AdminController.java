@@ -96,10 +96,11 @@ public class AdminController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Admin admin) {
-        adminService.add(admin);
-
         //给密码进行加密
         admin.setPassword(encoder.encode(admin.getPassword()));
+
+        adminService.add(admin);
+
         return new Result(true, StatusCode.OK, "增加成功");
     }
 

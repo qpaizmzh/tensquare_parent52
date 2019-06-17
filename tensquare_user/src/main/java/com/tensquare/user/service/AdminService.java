@@ -1,9 +1,6 @@
 package com.tensquare.user.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,6 +11,7 @@ import javax.persistence.criteria.Selection;
 
 import entitys.Result;
 import entitys.StatusCode;
+import io.jsonwebtoken.Jws;
 import org.apache.commons.codec.digest.Crypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +25,7 @@ import utils.IdWorker;
 
 import com.tensquare.user.dao.AdminDao;
 import com.tensquare.user.pojo.Admin;
+import utils.JwtUtil;
 
 /**
  * 服务层
@@ -44,6 +43,9 @@ public class AdminService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     /**
@@ -163,7 +165,14 @@ public class AdminService {
 
 
         if (adminsql != null && encoder.matches(admin.getPassword(), adminsql.getPassword())) {
-            return new Result(true, StatusCode.OK, "登录成功");
+            //登录成功后进行数据加密，返回指定的密钥
+            String token = jwtUtil.createJWT(admin.getId(),admin.getLoginname(), "admin");
+
+            Map<String,String> map = new HashMap<>();
+            map.put("username",admin.getLoginname());
+            map.put("token",token);
+
+            return new Result(true, StatusCode.OK, "登录成功",map);
         }
         return new Result(false, StatusCode.ERROR, "登录失败");
     }
