@@ -1,0 +1,10 @@
+server:
+  port: 6768
+eureka:
+  client:
+    register-with-eureka: false #是否将本服务注册到eureKa服务器中，但是本身就是个服务器，不需要注册
+    fetch-registry: false #获取注册信息
+    service-url: #Eureka客户端和Eureka服务端交互的地址
+     defaultZone: http://127.0.0.1:${server.port}/eureka/
+  instance:
+   prefer-ip-address: true #适用于方便调试，不加只能本地调试，不能服务器调试？？
