@@ -3,6 +3,7 @@ package com.tensquare.qa.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.tensquare.qa.client.BaseClient;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,15 @@ public class ProblemController {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private BaseClient baseClient;//这里的idea会显示错误，说他没有被作为Spring的组件扫描进去
+    //但是本质上这个东西是通过网络间的服务调用，所以不会出现问题，
+    //只是idea的对spring的检测过于谨慎
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public Result get() {
+        return new Result(true, StatusCode.OK, "查询成功", baseClient.findAll());
+    }
 
     /**
      * 查询全部数据

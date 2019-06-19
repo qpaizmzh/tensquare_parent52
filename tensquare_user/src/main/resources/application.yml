@@ -19,3 +19,7 @@ jwt:
   config:
     key: michael jordan
     ttl: 300000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6768/eureka/
