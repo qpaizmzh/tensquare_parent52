@@ -1,6 +1,6 @@
-package com.tensquare.user.config;
+package com.tensquare_friend.config;
 
-import com.tensquare.user.inteceptor.JwtInteceptor;
+import com.tensquare_friend.inteceptor.JwtInteceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -13,7 +13,7 @@ public class JwtConfiguration extends WebMvcConfigurationSupport {
     private JwtInteceptor jwtInteceptor;
 
     public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(jwtInteceptor).addPathPatterns("/**").excludePathPatterns("/**/login/**");
+        registry.addInterceptor(jwtInteceptor).addPathPatterns("/**").excludePathPatterns("/**/login/**");
     }
 
 

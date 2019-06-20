@@ -109,8 +109,8 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody User user) {
-        userService.add(user);
         user.setPassword(encoder.encode(user.getPassword()));
+        userService.add(user);
         return new Result(true, StatusCode.OK, "增加成功");
     }
 

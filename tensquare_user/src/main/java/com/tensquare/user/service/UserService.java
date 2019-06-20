@@ -219,7 +219,7 @@ public class UserService {
 
         if (userlogin != null && encoder.matches(user.getPassword(), userlogin.getPassword())) {
             //登录成功后进行数据加密，返回指定的密钥
-            String token = jwtUtil.createJWT(user.getId(),user.getMobile(), "user");
+            String token = jwtUtil.createJWT(userlogin.getId(),userlogin.getMobile(), "user");
 
             Map<String,String> map = new HashMap<>();
             map.put("mobile",user.getMobile());

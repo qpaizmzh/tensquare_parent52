@@ -1,4 +1,4 @@
-package com.tensquare.user.inteceptor;
+package com.tensquare_friend.inteceptor;
 
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
