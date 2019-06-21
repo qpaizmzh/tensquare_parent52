@@ -11,12 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 public class JwtConfiguration extends WebMvcConfigurationSupport {
 
-//    @Autowired
-//    private JwtInteceptor jwtInteceptor;
-//
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(jwtInteceptor).addPathPatterns("/**").excludePathPatterns("**/login/**");
-//    }
+    @Autowired
+    private JwtInteceptor jwtInteceptor;
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwtInteceptor).addPathPatterns("/**").excludePathPatterns("**/login/**");
+    }
 
 
 }

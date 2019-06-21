@@ -11,8 +11,6 @@ import utils.IdWorker;
 import utils.JwtUtil;
 
 @SpringBootApplication
-@EnableEurekaClient
-@EnableDiscoveryClient
 @EnableFeignClients
 public class QaApplication {
 

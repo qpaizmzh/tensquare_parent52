@@ -50,7 +50,8 @@ public class ProblemController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Result get() {
-        return new Result(true, StatusCode.OK, "查询成功", baseClient.findAll());
+        Result result =baseClient.findAll();
+        return result;
     }
 
     /**
