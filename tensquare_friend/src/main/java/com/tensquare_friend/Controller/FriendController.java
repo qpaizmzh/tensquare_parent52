@@ -57,4 +57,6 @@ public class FriendController {
             return new Result(false, StatusCode.ERROR, "参数异常");
         }
     }
+
+
 }

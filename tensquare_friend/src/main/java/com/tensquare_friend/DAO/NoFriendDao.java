@@ -3,6 +3,7 @@ package com.tensquare_friend.DAO;
 
 import com.tensquare_friend.Entity.NoFriend;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface NoFriendDao extends JpaRepository<NoFriend, String> {
@@ -20,6 +21,8 @@ public interface NoFriendDao extends JpaRepository<NoFriend, String> {
      * @param userid
      * @param friendid
      */
+    @Modifying
     @Query("delete from NoFriend f  where f.userid=?1 and f.friendid=?2")
     public void updateLike(String userid, String friendid);
+
 }

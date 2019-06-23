@@ -1,11 +1,12 @@
 package com.tensquare.qa.client;
 
+import com.tensquare.qa.client.impl.BaseClientImpl;
 import entitys.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "tensquare-base",path = "/label")
+@FeignClient(value = "tensquare-base",path = "/label",fallback = BaseClientImpl.class)
 public interface BaseClient {
 
     //本质上这是用过网络间的传输进行调用的
