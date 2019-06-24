@@ -20,3 +20,6 @@ eureka:
       defaultZone: http://127.0.0.1:6768/eureka/
   instance:
     prefer-ip-address: true #适用于方便调试，不加只能本地调试，不能服务器调试？？
+feign:
+  hystrix:
+    enabled: true

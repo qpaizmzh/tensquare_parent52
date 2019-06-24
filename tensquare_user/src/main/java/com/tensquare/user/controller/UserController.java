@@ -122,6 +122,7 @@ public class UserController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public Result update(@RequestBody User user, @PathVariable String id) {
         user.setId(id);
+        user.setPassword(encoder.encode(user.getPassword()));
         userService.update(user);
         return new Result(true, StatusCode.OK, "修改成功");
     }
@@ -138,7 +139,7 @@ public class UserController {
             userService.deleteById(id);
             return new Result(true, StatusCode.OK, "删除成功");
         }
-            return new Result(false,StatusCode.ACCESSERROR,"没有相应的权限进行删除");
+        return new Result(false, StatusCode.ACCESSERROR, "没有相应的权限进行删除");
 
 
     }
@@ -167,5 +168,14 @@ public class UserController {
             return new Result(false, StatusCode.OK, "验证成功");
         }
     }
+
+
+    @RequestMapping(value = "/updatefansandfollow/{userid}/{friendid}/{x}", method = RequestMethod.PUT)
+    public Result updateFansAndFollowcount(@PathVariable String userid, @PathVariable String friendid,@PathVariable int x) {
+        userService.updateFansAndFollowcount(userid, friendid, x);
+        return new Result(true, StatusCode.OK, "操作成功");
+
+    }
+
 
 }

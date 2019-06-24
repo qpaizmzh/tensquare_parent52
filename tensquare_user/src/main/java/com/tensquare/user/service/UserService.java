@@ -24,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import utils.IdWorker;
 
 import com.tensquare.user.dao.UserDao;
@@ -219,14 +220,28 @@ public class UserService {
 
         if (userlogin != null && encoder.matches(user.getPassword(), userlogin.getPassword())) {
             //登录成功后进行数据加密，返回指定的密钥
-            String token = jwtUtil.createJWT(userlogin.getId(),userlogin.getMobile(), "user");
+            String token = jwtUtil.createJWT(userlogin.getId(), userlogin.getMobile(), "user");
 
-            Map<String,String> map = new HashMap<>();
-            map.put("mobile",user.getMobile());
-            map.put("token",token);
+            Map<String, String> map = new HashMap<>();
+            map.put("mobile", user.getMobile());
+            map.put("token", token);
 
-            return new Result(true, StatusCode.OK, "登录成功",map);
+            return new Result(true, StatusCode.OK, "登录成功", map);
         }
         return new Result(false, StatusCode.ERROR, "登录失败");
     }
+
+    /***
+     * 更新用户粉丝数和关注数
+     * @param user
+     * @return
+     */
+    @Transactional
+    public void updateFansAndFollowcount(String userid, String friendid, int x) {
+        //更新粉丝数
+        userDao.updateFans(friendid, x);
+        //更新关注数
+        userDao.updatefollow(userid, x);
+    }
+
 }

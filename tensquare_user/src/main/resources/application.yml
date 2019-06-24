@@ -18,7 +18,7 @@ spring:
 jwt:
   config:
     key: michael jordan
-    ttl: 300000
+    ttl: 600000
 eureka:
   client:
     service-url:
