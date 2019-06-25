@@ -44,7 +44,12 @@ public class ProblemController {
     private HttpServletRequest request;
 
     @Autowired
-    private BaseClient baseClient;//这里的idea会显示错误，说他没有被作为Spring的组件扫描进去
+    private BaseClient baseClient;
+
+
+
+
+    //这里的idea会显示错误，说他没有被作为Spring的组件扫描进去
     //但是本质上这个东西是通过网络间的服务调用，所以不会出现问题，
     //只是idea的对spring的检测过于谨慎
 

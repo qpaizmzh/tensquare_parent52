@@ -22,6 +22,8 @@
         <module>tensquare_eureka</module>
         <module>tensquare_friend</module>
         <module>tensquare_manager</module>
+        <module>tensquare_web</module>
+        <module>tensquare_config</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -41,7 +43,7 @@
         <java.version>1.8</java.version>
     </properties>
 
-    <!--这个标签使用于锁定版本的-->
+    <!--这个标签使用于锁定版本的，这个相当于是从网上引用下来的？-->
     <dependencyManagement>
         <dependencies>
             <dependency>

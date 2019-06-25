@@ -14,3 +14,16 @@ zuul:
     tensquare-base: #从这里开始写的就是微服务的名字
       path: /base/** #配置请求的规则，这里用到的路径是该服务下的控制层下的路径
       serviceId: tensquare-base #注册到Eureka服务的Id
+    tensquare-article:
+      path: /article/**
+      serviceId: tensquare-article
+    tensquare-gathering:
+      path: /gathering/**
+      serviceId: tensquare-gathering
+    tensquare-base:
+      path: /base/**
+      serviceId: tensquare-base #注册到Eureka服务的Id
+jwt:
+  config:
+    key: michael jordan
+    ttl: 600000

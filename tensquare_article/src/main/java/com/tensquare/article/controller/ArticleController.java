@@ -3,6 +3,9 @@ package com.tensquare.article.controller;
 import java.util.List;
 import java.util.Map;
 
+import entitys.PageResult;
+import entitys.Result;
+import entitys.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tensquare.article.pojo.Article;
 import com.tensquare.article.service.ArticleService;
 
-import entitys.PageResult;
-import entitys.Result;
-import entitys.StatusCode;
+
 
 /**
  * 控制器层

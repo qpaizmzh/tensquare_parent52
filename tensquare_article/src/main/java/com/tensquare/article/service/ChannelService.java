@@ -19,10 +19,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import utils.IdWorker;
 
 import com.tensquare.article.dao.ChannelDao;
 import com.tensquare.article.pojo.Channel;
+import utils.IdWorker;
 
 /**
  * 服务层
